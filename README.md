@@ -1,4 +1,4 @@
-# upgrade_os_ansible
+# preinstall okd origin 3.11
 
 This script update your OS with Ansible and preinstall package to install afterwards openshift origin (okd) 3.11
 
