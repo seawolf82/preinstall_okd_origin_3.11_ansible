@@ -1,0 +1,7 @@
+
+- hosts: okd-servers
+  remote_user: root
+  roles:
+    - okd
+    - okd_version
+

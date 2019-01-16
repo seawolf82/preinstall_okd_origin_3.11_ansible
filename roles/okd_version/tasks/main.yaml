@@ -1,0 +1,13 @@
+---
+
+- name: Download and checkout git OKD version 3.11
+  git:
+    repo: 'https://github.com/openshift/openshift-ansible'
+    dest: /root/openshift-ansible-3.11
+    clone: yes
+    version: release-3.11
+  tags: git_okd
+
+
+
+

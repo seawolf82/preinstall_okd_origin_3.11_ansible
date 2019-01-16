@@ -1,0 +1,72 @@
+---
+
+- name: upgrade all packages 
+  yum:
+    name: "*"
+    state: latest
+  tags: upgrade
+
+
+- name: Install epel package
+  package: 
+    name: epel-release
+    state: present
+  tags: package  
+
+
+- name: Install htop
+  package: 
+    name: htop
+    state: present
+  tags: package  
+
+
+- name: ensure a list of packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - wget
+    - curl
+    - bash-completion
+    - vim
+    - zip
+    - bzip2
+    - gzip
+    - net-tools
+    - yum-utils
+    - ansible
+    - pyOpenSSL
+    - git
+    - bind-utils
+    - iptables-services
+    - bridge-utils
+    - kexec-tools
+    - sos
+    - psacct
+  tags: package
+
+
+- name: Ensure tzdata package is installed (Linux).
+  package:
+    name: tzdata
+    state: present
+  tags: package
+
+- name: Ensure rsyslog package is installed
+  package:
+    name: rsyslog
+    state: present
+  tags: package
+
+
+- name: Ensure rsyslog is running and enabled as configured
+  service:
+    name: rsyslog
+    state: started
+    enabled: yes
+  tags: package
+
+
+
+
