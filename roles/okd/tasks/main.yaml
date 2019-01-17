@@ -68,5 +68,16 @@
   tags: package
 
 
+- name: Install Docker package
+  package: 
+    name: docker
+    state: present
+  tags: package  
+
+- name: Ensure Docker is enabled at boot
+  service:
+    name: docker
+    enabled: yes
+  tags: package
 
 

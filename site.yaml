@@ -5,3 +5,7 @@
     - okd
     - okd_version
 
+- hosts: okd-masters
+  remote_user: root
+  roles:
+    - okd_version
