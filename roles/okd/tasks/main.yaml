@@ -44,6 +44,9 @@
     - kexec-tools
     - sos
     - psacct
+    - java-1.8.0-openjdk-headless
+    - python-passlib
+    - origin-clients
   tags: package
 
 
