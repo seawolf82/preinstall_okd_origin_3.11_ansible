@@ -83,5 +83,43 @@
     enabled: yes
   tags: package
 
-
+- name: Configure docker storage (DEVS)
+  lineinfile:
+    path: /etc/sysconfig/docker-storage-setup
+    regexp: '^STORAGE_DRIVER="overlay2" '
+    insertafter: '^#STORAGE_DRIVER="overlay2" '
+    line: 'DEVS=/dev/sdb'
+    owner: root
+    group: root
+    mode: 0664
+  tags: docker-storage
  
+- name: Configure docker storage (VG)
+  lineinfile:
+    path: /etc/sysconfig/docker-storage-setup
+    regexp: '^DEVS=/dev/sdb '
+    insertafter: '^#DEVS=/dev/sdb '
+    line: 'VG=docker-vg'
+    owner: root
+    group: root
+    mode: 0664
+  tags: docker-storage
+ 
+- name: Create docker storage setup
+  command: docker-storage-setup
+  tags: docker-storage
+
+- name: Ensure Docker is running
+  service:
+    name: docker
+    state: started
+  tags: docker-storage
+
+- name: Copy hosts into /etc/hosts
+  copy:
+    src: hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+  tags: etc_hosts

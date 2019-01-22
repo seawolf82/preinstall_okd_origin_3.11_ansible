@@ -1,0 +1,6 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.56.22 okd-master-new-01.localdomain
+192.168.56.22 ocp.example.com
+192.168.56.23 okd-node-new-01.localdomain
+192.168.56.24 okd-node-new-02.localdomain

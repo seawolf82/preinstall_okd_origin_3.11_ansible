@@ -9,5 +9,13 @@
   tags: git_okd
 
 
+- name: Copy ocp_hosts /etc/ansible
+  copy:
+    src: ocp_new_3.11
+    dest: /etc/ansible/hosts
+    owner: root
+    group: root
+    mode: 0644
+  tags: ansible_hosts
 
 

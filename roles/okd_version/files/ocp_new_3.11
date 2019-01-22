@@ -1,0 +1,180 @@
+# Create an OSEv3 group that contains the master, nodes, etcd, and lb groups.
+# The lb group lets Ansible configure HAProxy as the load balancing solution.
+# Comment lb out if your load balancer is pre-configured.
+
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+infra
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_ssh_user=root
+
+# https://github.com/openshift/openshift-ansible/blob/master/DEPLOYMENT_TYPES.md
+deployment_type=origin
+#oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
+#oreg_auth_user=""
+#oreg_auth_password=""
+
+
+# Skip env validation
+openshift_disable_check=disk_availability,docker_storage,memory_availability,docker_image_availability,package_version,docker_storage
+
+# Configure usage of openshift_clock role.
+openshift_clock_enabled=true
+
+# Set upgrade restart mode for full system restarts
+openshift_rolling_restart_mode=system
+
+# Enable cockpit
+osm_use_cockpit=false
+osm_cockpit_plugins=['cockpit-kubernetes', 'cockpit-pcp', 'setroubleshoot-server']
+
+# Docker / Registry Configuration
+container_runtime_docker_storage_type=overlay2
+docker_version="1.13.1"
+openshift_docker_options="--log-driver json-file --log-opt max-size=10M --log-opt max-file=1 --ipv6=false --log-level=warn"
+openshift_docker_disable_push_dockerhub=True
+openshift_docker_insecure_registries=docker-registry.default.svc,docker-registry.default.svc.cluster.local
+
+# Native high availbility cluster method with optional load balancer.
+# If no lb group is defined installer assumes that a load balancer has
+# been preconfigured. For installation the value of
+# openshift_master_cluster_hostname must resolve to the load balancer
+# or to one or all of the masters defined in the inventory if no load
+# balancer is present.
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=ocp.example.com
+openshift_master_cluster_public_hostname=ocp.example.com
+openshift_master_default_subdomain=apps.example.com
+openshift_master_api_port=8443
+openshift_master_console_port=8443
+
+# Configure the multi-tenant SDN plugin (default is 'redhat/openshift-ovs-subnet')
+os_sdn_network_plugin_name=redhat/openshift-ovs-multitenant
+
+# Configure SDN cluster network and kubernetes service CIDR blocks. These
+# network blocks should be private and should not conflict with network blocks
+# in your infrastructure that pods may require access to. Can not be changed
+# after deployment.
+osm_cluster_network_cidr=10.1.0.0/16
+openshift_portal_net=172.30.0.0/16
+osm_host_subnet_length=8
+
+#Proxy
+openshift_generate_no_proxy_hosts=true
+
+# Uncomment the following to enable htpasswd authentication; defaults to
+# DenyAllPasswordIdentityProvider.
+openshift_master_identity_providers=[{u'challenge': u'true', u'login': u'true', u'kind': u'HTPasswdPasswordIdentityProvider', u'name': u'htpasswd_auth'}]
+openshift_master_htpasswd_users={'finessi': '$apr1$8i5UBEfo$6dTZj6t/1/Y1YoLePKr.M/'}
+
+# Custom Certs
+#openshift_master_overwrite_named_certificates=true
+#openshift_master_named_certificates=[{"certfile": "/opt/app-root/src/pki/server.cer", "keyfile": "/opt/app-root/src/pki/server.key", "names": ["ocp.example.com"], "cafile": "/opt/app-root/src/pki/ca.cer"}]
+#openshift_hosted_router_certificate={"certfile": "/opt/app-root/src/pki/server_star.cer", "keyfile": "/opt/app-root/src/pki/server_star.key", "cafile": "/opt/app-root/src/pki/ca_star.cer"}
+
+# Openshift Registry Options
+openshift_hosted_registry_storage_kind=glusterfs
+openshift_hosted_registry_replicas=1
+openshift_hosted_registry_storage_volume_size=20Gi
+
+# Setup cluster/pool OCS per App
+openshift_storage_glusterfs_namespace=ocs
+openshift_storage_glusterfs_storageclass=true
+openshift_storage_glusterfs_storageclass_default=false
+openshift_storage_glusterfs_block_deploy=true
+openshift_storage_glusterfs_block_host_vol_create=true
+openshift_storage_glusterfs_block_host_vol_size=25
+openshift_storage_glusterfs_block_storageclass=true
+openshift_storage_glusterfs_block_storageclass_default=false
+
+# Metrics
+openshift_metrics_install_metrics=True
+openshift_metrics_cassandra_replicas=1
+openshift_metrics_cassandra_limits_memory=2Gi
+openshift_metrics_hawkular_replicas=1
+openshift_metrics_duration=5
+openshift_metrics_cassandra_pvc_size=20Gi
+openshift_metrics_cassandra_storage_type=dynamic
+openshift_metrics_cassandra_pvc_storage_class_name=glusterfs-block
+
+# Logging deployment
+openshift_logging_install_logging=False
+openshift_logging_use_ops=false
+openshift_logging_public_master_url=https://ocp.example.com:8443
+openshift_logging_curator_default_days=7
+openshift_logging_es_pvc_size=20Gi
+openshift_logging_es_pvc_dynamic=true
+openshift_logging_es_pvc_storage_class_name=glusterfs-block
+openshift_logging_es_memory_limit=2Gi
+openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra":"true"}
+openshift_logging_es_ops_nodeselector={"node-role.kubernetes.io/infra":"true"}
+
+# Prometheus
+openshift_cluster_monitoring_operator_install=True
+openshift_cluster_monitoring_operator_prometheus_storage_enabled=true
+openshift_cluster_monitoring_operator_alertmanager_storage_enabled=true
+openshift_cluster_monitoring_operator_prometheus_storage_capacity=10Gi
+openshift_cluster_monitoring_operator_node_selector={"node-role.kubernetes.io/infra":"true"}
+openshift_cluster_monitoring_operator_prometheus_storage_class_name=glusterfs-block
+openshift_cluster_monitoring_operator_alertmanager_storage_class_name=glusterfs-block
+
+
+# Service brokers
+
+#openshift_service_catalog_image_version=latest
+#ansible_service_broker_local_registry_whitelist=['.*-apb$']
+#openshift_template_service_broker_namespaces=['openshift']
+openshift_enable_service_catalog=False
+
+# Operator Lifecycle Manager
+# openshift_enable_olm=true
+# openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'your_user','password':'your_pwd','test_image':'mongodb/enterprise-operator:0.3.2'}]
+
+# Grafana
+openshift_grafana_storage_type=pvc
+openshift_grafana_sc_name=glusterfs-block
+openshift_grafana_storage_volume_size=10Gi
+openshift_grafana_node_selector={"node-role.kubernetes.io/infra":"true"}
+
+openshift_metrics_cassandra_nodeselector={"region":"infra"}
+openshift_metrics_hawkular_nodeselector={"region":"infra"}
+openshift_metrics_heapster_nodeselector={"region":"infra"}
+
+# Node Groups
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true','region=master']}, {'name': 'node-config-infra', 'labels': ['node-role.kubernetes.io/infra=true','region=infra']}, {'name': 'node-config-compute', 'labels': ['node-role.kubernetes.io/compute=true','region=primary']}, {'name': 'node-config-compute-infra', 'labels': ['node-role.kubernetes.io/infra=true','region=infra','node-role.kubernetes.io/compute=true','node=compute']}, {'name': 'node-config-master-infra', 'labels': ['node-role.kubernetes.io/infra=true','region=infra','node-role.kubernetes.io/master=true']} ]
+
+# Certificates expiration
+openshift_hosted_registry_cert_expire_days=730
+openshift_ca_cert_expire_days=1825
+openshift_node_cert_expire_days=730
+openshift_master_cert_expire_days=730
+etcd_ca_default_days=1825
+
+# host group for masters
+[masters]
+okd-master-new-01.localdomain openshift_schedulable=true
+
+# host group for etcd
+[etcd]
+okd-master-new-01.localdomain openshift_ip=192.168.56.22
+
+[infra]
+okd-master-new-01.localdomain
+
+
+[glusterfs]
+okd-master-new-01.localdomain openshift_ip=192.168.56.22 glusterfs_devices='[ "/dev/sdc" ]'
+okd-node-new-01.localdomain openshift_ip=192.168.56.23 glusterfs_devices='[ "/dev/sdc" ]'
+okd-node-new-02.localdomain openshift_ip=192.168.56.24 glusterfs_devices='[ "/dev/sdc" ]'
+
+
+# host group for nodes, includes region info
+[nodes]
+okd-master-new-01.localdomain openshift_ip=192.168.56.22 openshift_node_group_name="node-config-master-infra"
+okd-node-new-01.localdomain openshift_ip=192.168.56.23 openshift_node_group_name="node-config-compute"
+okd-node-new-02.localdomain openshift_ip=192.168.56.24 openshift_node_group_name="node-config-compute"
