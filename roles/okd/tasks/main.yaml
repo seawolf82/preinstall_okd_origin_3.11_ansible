@@ -46,7 +46,7 @@
     - psacct
     - java-1.8.0-openjdk-headless
     - python-passlib
-    - origin-clients
+    - centos-release-openshift-origin311
   tags: package
 
 
