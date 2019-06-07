@@ -36,12 +36,23 @@
   command: yum downgrade ansible -y
   tags: package
 
-- name: Remove htop if present
+- name: Remove htop package if present
   package:
     name: htop
     state: absent
   tags: package
 
+- name: Remove zip package if present
+  package:
+    name: zip
+    state: absent
+  tags: package
+
+- name: Remove unzip package if present
+  package:
+    name: unzip
+    state: absent
+  tags: package
 - name: Remove repository (and clean up left-over metadata)
   yum_repository:
     name: epel
