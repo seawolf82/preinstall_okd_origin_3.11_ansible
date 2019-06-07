@@ -36,6 +36,14 @@
   command: yum downgrade ansible -y
   tags: package
 
+# Example removing a repository and cleaning up metadata cache
+- name: Remove repository (and clean up left-over metadata)
+  yum_repository:
+    name: epel
+    state: absent
+  notify: yum-clean-metadata
+  tags: package
+
 - name: Ensure tzdata package is installed (Linux).
   package:
     name: tzdata
