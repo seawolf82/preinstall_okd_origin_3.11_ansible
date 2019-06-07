@@ -115,13 +115,13 @@ openshift_storage_glusterfs_block_storageclass_default=false
 #openshift_logging_es_ops_nodeselector={"node-role.kubernetes.io/infra":"true"}
 
 # Prometheus
-openshift_cluster_monitoring_operator_install=True
-openshift_cluster_monitoring_operator_prometheus_storage_enabled=true
-openshift_cluster_monitoring_operator_alertmanager_storage_enabled=true
-openshift_cluster_monitoring_operator_prometheus_storage_capacity=10Gi
-openshift_cluster_monitoring_operator_node_selector={"node-role.kubernetes.io/infra":"true"}
-openshift_cluster_monitoring_operator_prometheus_storage_class_name=glusterfs-block
-openshift_cluster_monitoring_operator_alertmanager_storage_class_name=glusterfs-block
+#openshift_cluster_monitoring_operator_install=True
+#openshift_cluster_monitoring_operator_prometheus_storage_enabled=true
+#openshift_cluster_monitoring_operator_alertmanager_storage_enabled=true
+#openshift_cluster_monitoring_operator_prometheus_storage_capacity=10Gi
+#openshift_cluster_monitoring_operator_node_selector={"node-role.kubernetes.io/infra":"true"}
+#openshift_cluster_monitoring_operator_prometheus_storage_class_name=glusterfs-block
+#openshift_cluster_monitoring_operator_alertmanager_storage_class_name=glusterfs-block
 
 
 # Service brokers
@@ -136,10 +136,10 @@ openshift_enable_service_catalog=False
 # openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'your_user','password':'your_pwd','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
 # Grafana
-openshift_grafana_storage_type=pvc
-openshift_grafana_sc_name=glusterfs-block
-openshift_grafana_storage_volume_size=10Gi
-openshift_grafana_node_selector={"node-role.kubernetes.io/infra":"true"}
+#openshift_grafana_storage_type=pvc
+#openshift_grafana_sc_name=glusterfs-block
+#openshift_grafana_storage_volume_size=10Gi
+#openshift_grafana_node_selector={"node-role.kubernetes.io/infra":"true"}
 
 #openshift_metrics_cassandra_nodeselector={"region":"infra"}
 #openshift_metrics_hawkular_nodeselector={"region":"infra"}
