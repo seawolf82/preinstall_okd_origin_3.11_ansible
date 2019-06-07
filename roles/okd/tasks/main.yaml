@@ -36,7 +36,12 @@
   command: yum downgrade ansible -y
   tags: package
 
-# Example removing a repository and cleaning up metadata cache
+- name: Remove htop if present
+  package:
+    name: htop
+    state: absent
+  tags: package
+
 - name: Remove repository (and clean up left-over metadata)
   yum_repository:
     name: epel
