@@ -32,6 +32,9 @@
     - centos-release-ansible26
   tags: package
 
+- name: Downgrade ansible package to version 2.6
+  command: yum downgrade ansible -y
+  tags: package
 
 - name: Ensure tzdata package is installed (Linux).
   package:
