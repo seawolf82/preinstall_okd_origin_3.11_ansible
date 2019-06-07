@@ -4,21 +4,7 @@
   yum:
     name: "*"
     state: latest
-  tags: upgrade
-
-
-- name: Install epel package
-  package: 
-    name: epel-release
-    state: present
-  tags: package  
-
-
-- name: Install htop
-  package: 
-    name: htop
-    state: present
-  tags: package  
+  tags: upgrade 
 
 
 - name: ensure a list of packages installed
@@ -30,12 +16,8 @@
     - curl
     - bash-completion
     - vim
-    - zip
-    - bzip2
-    - gzip
     - net-tools
     - yum-utils
-    - ansible
     - pyOpenSSL
     - git
     - bind-utils
@@ -47,6 +29,7 @@
     - java-1.8.0-openjdk-headless
     - python-passlib
     - centos-release-openshift-origin311
+    - centos-release-ansible26
   tags: package
 
 
